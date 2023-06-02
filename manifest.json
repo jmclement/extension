@@ -1,0 +1,14 @@
+{
+  "name": "MCB InovApp v3",
+  "version": "0.1",
+  "description": "MCB InvovApp - Hack Wizards Extension",
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["contentScript.js"],
+      "run_at": "document_end"
+    }
+  ],
+  "host_permissions": ["<all_urls>"],
+  "manifest_version": 3
+}
