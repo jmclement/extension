@@ -1,9 +1,16 @@
+let customerId = "HW654321";
 let bToken = "";
 let elgRisk = "";
 let elgAmount = 0;
+let customerDOB = "";
+let customerSalary = 0;
+
 
 const init = function(){
   
+  apiAuth();
+  console.log('Start DOM manip');
+
   cards = document.getElementsByClassName("card-image");
 
   for(i=0;i<cards.length;i++){
@@ -33,10 +40,10 @@ const init = function(){
     iPriceEl = document.createElement('div');
 
     if (price <= elgAmount) {
-      iPriceEl.innerText = "Eligible";
+      iPriceEl.innerText = "Eligible" + elgAmount;
     }
     else {
-      iPriceEl.innerText = "Not Eligible";
+      iPriceEl.innerText = "Not Eligible" + elgAmount;
     }
 
 
@@ -44,14 +51,13 @@ const init = function(){
 
   }
 
-  apiAuth();
 
 }
 
 const apiAuth = async function(){
   url = "https://mcbinovappapi.azurewebsites.net/auth";
   let reqBody = {
-    "username": "HW654321",
+    "username": `${customerId}`,
     "password": "test"
   }
   response = await fetch(url, {method: 'POST', body: JSON.stringify(reqBody)});
@@ -61,15 +67,41 @@ const apiAuth = async function(){
 }
 
 const apiEligibilityCheck = async function(){
+
+  console.log('Elig start');
+
   let headers = {
     "Authorization": "Bearer " + bToken["token"],
     "Content-Type": "application/json"
   }
 
+  const urlCustomerDetails = `https://mcbinovappapi.azurewebsites.net/customers/${customerId}`;
+
+  response = await fetch(urlCustomerDetails,{method: 'GET', headers: headers});
+
+  customerData = await response.json();
+
+  customerSalary = customerData["Customer"]['Salary'];
+  
+  customerDOB = customerData["Customer"]['DateOfBirth'];
+
+
+  const date = new Date();
+  let day = date.getDate();
+  let month = date.getMonth() + 1;
+  let year = date.getFullYear();
+
+  let currentDate = `${year}-${month}-${day}`;
+  
+  let customerAge = Date.parse(currentDate) - Date.parse(customerDOB);
+
+  customerAge = year - customerDOB.substring(0,4)
+
+
   let reqBody = {
-    "CustomerAge": 32,
+    "CustomerAge": customerAge,
     "LoanCategory": "Housing_first_property",
-    "Salary": 10000
+    "Salary": parseInt(customerSalary)
   }
 
   const url = "https://mcbinovappapi.azurewebsites.net/loans/eligibilityCheck";
@@ -77,6 +109,8 @@ const apiEligibilityCheck = async function(){
   elgData = await response.json();
   elgRisk = elgData['Risk'];
   elgAmount = elgData['LoanEligibleAmount'];
+
+  console.log('Elig end');
 }
 
 init();
