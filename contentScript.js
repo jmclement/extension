@@ -42,6 +42,13 @@ const init = async function(){
 
     if (price <= elgAmount) {
       iPriceEl.innerText = "Eligible";
+
+      iPriceEl.innerHTML = `<form action="http://localhost" method="post">
+        <input type="hidden" name="propertyamt" value="${price}"</input>
+        <input type="hidden" name="custcir" value="${customerId}"</input>
+        <button type="submit" name="submit" value="submit" class="btn-link">Eligible</button>
+    </form>`
+
     }
     else {
       iPriceEl.innerText = "Not Eligible";
