@@ -6,9 +6,10 @@ let customerDOB = "";
 let customerSalary = 0;
 
 
-const init = function(){
+const init = async function(){
   
-  apiAuth();
+  await apiAuth();
+
   console.log('Start DOM manip');
 
   cards = document.getElementsByClassName("card-image");
@@ -40,10 +41,10 @@ const init = function(){
     iPriceEl = document.createElement('div');
 
     if (price <= elgAmount) {
-      iPriceEl.innerText = "Eligible" + elgAmount;
+      iPriceEl.innerText = "Eligible";
     }
     else {
-      iPriceEl.innerText = "Not Eligible" + elgAmount;
+      iPriceEl.innerText = "Not Eligible";
     }
 
 
@@ -63,7 +64,7 @@ const apiAuth = async function(){
   response = await fetch(url, {method: 'POST', body: JSON.stringify(reqBody)});
   bToken = await response.json()
   console.log(bToken["token"]);
-  apiEligibilityCheck();
+  await apiEligibilityCheck();
 }
 
 const apiEligibilityCheck = async function(){
