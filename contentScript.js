@@ -4,6 +4,7 @@ let elgRisk = "";
 let elgAmount = 0;
 let customerDOB = "";
 let customerSalary = 0;
+let properyTitle = "";
 
 
 const init = async function(){
@@ -56,6 +57,8 @@ const init = async function(){
 
 
     cards[i].insertAdjacentElement('beforebegin',iPriceEl);
+
+    parentEl.querySelector(".title-holder")
 
   }
 
